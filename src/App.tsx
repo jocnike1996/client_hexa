@@ -29,7 +29,7 @@ function App() {
 
         setStatus('Sending...');
         try {
-            await axios.post('https://hexa-contact-backend.onrender.com/send', contactForm);
+            await axios.post('https://client-hexa-1.onrender.com/send', contactForm);
 
             setStatus("✅ Message sent successfully!");
             setContactForm({ fullname: "", email: "", message: "" }); // Clear form
