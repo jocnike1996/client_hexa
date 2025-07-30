@@ -29,7 +29,8 @@ function App() {
 
         setStatus('Sending...');
         try {
-            const response = await axios.post("http://localhost:5000/send", contactForm);
+            await axios.post('https://hexa-contact-backend.onrender.com/send', contactForm);
+
             setStatus("✅ Message sent successfully!");
             setContactForm({ fullname: "", email: "", message: "" }); // Clear form
         } catch (error) {
@@ -191,6 +192,7 @@ function App() {
                                     </div>
                                     <button type="submit" className="btn btn-dark px-4 py-2">Submit</button>
                                 </form>
+                                <p>{status}</p>
                             </div>
 
                             {/* Right: Logo and Contact Info */}
