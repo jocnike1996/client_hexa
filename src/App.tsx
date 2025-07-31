@@ -30,7 +30,7 @@ function App() {
         setStatus('Sending...');
         try {
             // await axios.post('http://localhost:5000/send.', contactForm);
-            await axios.post('https://client-hexa-1.onrender.com/send', contactForm);
+            await axios.post('https://contact-backend-tbks.onrender.com/send', contactForm);
 
             setStatus("✅ Message sent successfully!");
             setContactForm({ fullname: "", email: "", message: "" }); // Clear form
