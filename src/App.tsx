@@ -10,6 +10,9 @@ import background from '/src/assets/background.png'
 import aboutUs from '/src/assets/aboutUs.png'
 import logoFooter from '/src/assets/hexa.svg'
 import { useState } from 'react';
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ClipLoader } from 'react-spinners';
 
 import axios from 'axios';
 
@@ -23,20 +26,33 @@ function App() {
         const { name, value } = e.target;
         setContactForm((prev: any) => ({ ...prev, [name]: value }));
     }
-    const [status, setStatus] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+
+
+
     const handelSubmit = async (e: any) => {
         e.preventDefault();
 
-        setStatus('Sending...');
+        setIsLoading(true);
+
         try {
             // await axios.post('http://localhost:5000/send.', contactForm);
-            await axios.post('https://contact-backend-tbks.onrender.com/send', contactForm);
+            const response = await axios.post('https://contact-backend-tbks.onrender.com/send', contactForm);
+            const msg = 'Email sent successfully'
+            if (response.data === msg) {
+                toast.success(response.data);
+                setIsLoading(false);
+                setContactForm({ fullname: "", email: "", message: "" }); // Clear form
+            } else {
+                toast.error(response.data);
+            }
 
-            setStatus("✅ Message sent successfully!");
-            setContactForm({ fullname: "", email: "", message: "" }); // Clear form
+
+
         } catch (error) {
             console.error("Error:", error);
-            setStatus("❌ Failed to send message.");
+
         }
         // alert(JSON.stringify(contactForm));
     }
@@ -44,6 +60,22 @@ function App() {
 
     return (
         <>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Slide}
+                toastClassName="modern-toast"
+                progressClassName="modern-progress"
+            />
+
             {/* Removed <body> tag, replaced with a div */}
             <div className='main_body'>
                 {/* header */}
@@ -163,6 +195,7 @@ function App() {
                                         <input
                                             name="fullname"
                                             type="text"
+                                            value={contactForm.fullname}
                                             onChange={handelChange}
                                             style={{ width: '70%' }}
                                             className="form-control bg-secondary-subtle border-0"
@@ -174,6 +207,7 @@ function App() {
                                         <input
                                             name="email"
                                             type="email"
+                                            value={contactForm.email}
                                             onChange={handelChange}
                                             style={{ width: '70%' }}
                                             className="form-control bg-secondary-subtle border-0"
@@ -185,15 +219,16 @@ function App() {
                                         <textarea
                                             name="message"
                                             onChange={handelChange}
+                                            value={contactForm.message}
                                             className="form-control bg-secondary-subtle border-0"
                                             placeholder="Your Message"
                                             rows={6}
                                             required
                                         ></textarea>
                                     </div>
-                                    <button type="submit" className="btn btn-dark px-4 py-2">Submit</button>
+                                    <button type="submit" disabled={isLoading} className="btn btn-dark px-4 py-2">Submit {isLoading && <ClipLoader color="#ffffffff" className='ms-1 mt-1' size={16} />} </button>
                                 </form>
-                                <p>{status}</p>
+
                             </div>
 
                             {/* Right: Logo and Contact Info */}
